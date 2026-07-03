@@ -8,6 +8,11 @@
   if (!modal || !titleEl || !imagesEl || !closeBtn) return;
 
   const worksById = {};
+  const TAP_THRESHOLD = 10;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchMoved = false;
+  let suppressClick = false;
 
   function indexWorks() {
     (window.WORKS || []).forEach(function (work) {
@@ -48,17 +53,63 @@
     imagesEl.innerHTML = '';
   }
 
+  function getWorkFigureFromEvent(event) {
+    if (event.target.closest) {
+      const figure = event.target.closest('.works-column__item--clickable');
+      if (figure && figure.dataset.workId) return figure;
+    }
+
+    const touch = event.changedTouches && event.changedTouches[0];
+    if (!touch) return null;
+
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!el || !el.closest) return null;
+
+    const figure = el.closest('.works-column__item--clickable');
+    return figure && figure.dataset.workId ? figure : null;
+  }
+
   function onThumbnailActivate(event) {
-    const figure = event.target.closest('.works-column__item--clickable');
-    if (!figure || !figure.dataset.workId) return;
+    const figure = getWorkFigureFromEvent(event);
+    if (!figure) return;
 
     event.preventDefault();
     event.stopPropagation();
     openWork(figure.dataset.workId);
   }
 
+  document.addEventListener('touchstart', function (event) {
+    if (document.body.classList.contains('work-modal-open') || !event.touches.length) return;
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+    touchMoved = false;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function (event) {
+    if (document.body.classList.contains('work-modal-open') || !event.touches.length) return;
+    const deltaX = event.touches[0].clientX - touchStartX;
+    const deltaY = event.touches[0].clientY - touchStartY;
+    if (Math.abs(deltaX) > TAP_THRESHOLD || Math.abs(deltaY) > TAP_THRESHOLD) {
+      touchMoved = true;
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (event) {
+    if (document.body.classList.contains('work-modal-open') || touchMoved) return;
+    suppressClick = true;
+    onThumbnailActivate(event);
+  });
+
   document.addEventListener('click', function (event) {
     if (document.body.classList.contains('work-modal-open')) return;
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
+    if (touchMoved) {
+      touchMoved = false;
+      return;
+    }
     onThumbnailActivate(event);
   });
 
