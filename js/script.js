@@ -88,7 +88,15 @@ function setupColumn(column) {
 
   let currentY = 0;
   let maxScroll = 0;
-  let touchStartY = 0;
+  let gestureStartX = 0;
+  let gestureStartY = 0;
+  let lastTouchY = 0;
+  let scrollAxis = null;
+  const AXIS_THRESHOLD = 8;
+
+  function resetTouchGesture() {
+    scrollAxis = null;
+  }
 
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
@@ -135,7 +143,10 @@ function setupColumn(column) {
 
   function onTouchStart(e) {
     if (!e.touches.length) return;
-    touchStartY = e.touches[0].clientY;
+    gestureStartX = e.touches[0].clientX;
+    gestureStartY = e.touches[0].clientY;
+    lastTouchY = gestureStartY;
+    scrollAxis = null;
   }
 
   function onTouchMove(e) {
@@ -145,9 +156,20 @@ function setupColumn(column) {
     if (maxScroll <= 0) measure();
     if (maxScroll <= 0) return;
 
+    const touchX = e.touches[0].clientX;
     const touchY = e.touches[0].clientY;
-    currentY = clamp(currentY + (touchStartY - touchY), 0, maxScroll);
-    touchStartY = touchY;
+    const deltaX = touchX - gestureStartX;
+    const deltaY = touchY - gestureStartY;
+
+    if (!scrollAxis) {
+      if (Math.abs(deltaX) < AXIS_THRESHOLD && Math.abs(deltaY) < AXIS_THRESHOLD) return;
+      scrollAxis = Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y';
+    }
+
+    if (scrollAxis === 'x') return;
+
+    currentY = clamp(currentY + (lastTouchY - touchY), 0, maxScroll);
+    lastTouchY = touchY;
     applyTransform();
     e.preventDefault();
   }
@@ -155,6 +177,8 @@ function setupColumn(column) {
   column.addEventListener('wheel', onWheel, { passive: false });
   column.addEventListener('touchstart', onTouchStart, { passive: true });
   column.addEventListener('touchmove', onTouchMove, { passive: false });
+  column.addEventListener('touchend', resetTouchGesture, { passive: true });
+  column.addEventListener('touchcancel', resetTouchGesture, { passive: true });
   window.addEventListener('resize', measure);
 
   const images = list.querySelectorAll('img');
