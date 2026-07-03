@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="yd - デザイン事務所">
+  <title>yd | デザイン事務所</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="tab-works">
+
+  <header class="header" id="header">
+    <div class="header__inner">
+      <button type="button" class="header__logo" data-tab="works">yd</button>
+
+      <button class="header__toggle" id="navToggle" aria-label="メニューを開く" aria-expanded="false">
+        <span class="header__toggle-bar"></span>
+        <span class="header__toggle-bar"></span>
+        <span class="header__toggle-bar"></span>
+      </button>
+
+      <nav class="header__nav" id="navMenu" role="tablist">
+        <ul class="header__nav-list">
+          <li><button type="button" class="header__nav-link is-active" data-tab="works" role="tab" aria-selected="true">Works</button></li>
+          <li><button type="button" class="header__nav-link" data-tab="about" role="tab" aria-selected="false">About</button></li>
+          <li><button type="button" class="header__nav-link" data-tab="contact" role="tab" aria-selected="false">Contact</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <section class="panel panel--works is-active" id="panel-works" data-panel="works" role="tabpanel">
+      <div class="works">
+        <h1 class="works__title">WORKS</h1>
+        <div class="works-columns" id="worksColumns"></div>
+      </div>
+    </section>
+
+    <section class="panel panel--about" id="panel-about" data-panel="about" role="tabpanel" hidden>
+      <div class="container section">
+        <h2 class="section__title">ABOUT</h2>
+
+        <dl class="about__list">
+          <div class="about__item">
+            <dt class="about__term">名称</dt>
+            <dd class="about__desc">株式会社 yd</dd>
+          </div>
+          <div class="about__item">
+            <dt class="about__term">代表</dt>
+            <dd class="about__desc">松崎 理</dd>
+          </div>
+          <div class="about__item">
+            <dt class="about__term">業務内容</dt>
+            <dd class="about__desc">グラフィックデザイン / エディトリアルデザイン / アートディレクション</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="panel panel--contact" id="panel-contact" data-panel="contact" role="tabpanel" hidden>
+      <div class="container section">
+        <h2 class="section__title">CONTACT</h2>
+
+        <dl class="about__list">
+          <div class="about__item">
+            <dt class="about__term">Email</dt>
+            <dd class="about__desc">oba-q@xvf.biglobe.ne.jp</dd>
+          </div>
+          <div class="about__item">
+            <dt class="about__term">Instagram</dt>
+            <dd class="about__desc">yd_design_works</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__copy">&copy; 2026 yd</p>
+    </div>
+  </footer>
+
+  <div class="work-modal" id="workModal" hidden aria-hidden="true">
+    <div class="work-modal__backdrop" data-close></div>
+    <div class="work-modal__panel" role="dialog" aria-modal="true" aria-labelledby="workModalTitle">
+      <button type="button" class="work-modal__close" aria-label="閉じる">×</button>
+      <h2 class="work-modal__title" id="workModalTitle"></h2>
+      <div class="work-modal__images" id="workModalImages"></div>
+    </div>
+  </div>
+
+  <script src="js/works-data.js"></script>
+  <script src="js/works-render.js"></script>
+  <script src="js/works-detail.js"></script>
+  <script src="js/script.js" defer></script>
+</body>
+</html>
