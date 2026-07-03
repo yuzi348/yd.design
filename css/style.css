@@ -512,6 +512,43 @@ body.work-modal-open {
     margin-top: 0;
     height: 100%;
   }
+
+  .panel--about.is-active,
+  .panel--contact.is-active {
+    min-height: auto;
+  }
+
+  .panel--about.is-active .container,
+  .panel--contact.is-active .container {
+    padding: 0 16px;
+  }
+
+  .panel--about .section,
+  .panel--contact .section {
+    padding: calc(var(--header-height) + 24px) 0 48px;
+  }
+
+  .panel--about .section__title,
+  .panel--contact .section__title {
+    text-align: right;
+    margin-bottom: 16px;
+    font-size: var(--font-size-works-title);
+  }
+
+  .about__item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .about__term {
+    padding: 16px 0 0;
+  }
+
+  .about__desc {
+    padding: 0 0 16px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
 }
 
 /* ===== Section Common ===== */
