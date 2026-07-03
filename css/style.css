@@ -479,6 +479,13 @@ body.work-modal-open {
     overflow-y: hidden;
     padding: 0 8px;
     align-items: start;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+  }
+
+  .works-column {
+    scroll-snap-align: start;
   }
 
   .works-column:nth-child(1) {
